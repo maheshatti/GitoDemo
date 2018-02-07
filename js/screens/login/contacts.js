@@ -3,6 +3,8 @@ import {
   FlatList,
   View,
   StyleSheet,
+  BackAndroid,
+  BackHandler,
   Image,
   TouchableOpacity
 } from 'react-native';
@@ -18,6 +20,7 @@ let moment = require('moment');
 var memberslength;
 var wsmembers=[];
 var chats;
+
 export class Contacts extends React.Component {
   static navigationOptions = {
     title: 'Contacts List'.toUpperCase()
@@ -28,15 +31,34 @@ export class Contacts extends React.Component {
     this.renderHeader = this._renderHeader.bind(this);
     this.renderItem = this._renderItem.bind(this);
     this.state = {
-      data: []
+      data: [],
+      
     }
+debugger
+
   }
 
+  componentDidMount() {
+    this._loadInitialState().done();
+    BackHandler.addEventListener('hardwareBackPress', this.onBackPress.bind(this));
+  }
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.onBackPress.bind(this));
+  }
+  onBackPress () {
+      
+   if(this.props.navigation.state.routeName == "Contacts"){
+     BackHandler.exitApp();
+     return true;
+   }
+
+    return true;
+  }
   _filter(text) {
     let pattern = new RegExp(text, 'i');
     let chats = _.filter(this.chats, (chat) => {
 
-      if (chat.name.search(pattern) != -1)
+      if (chat.name.search(pattern) != -1 || chat.text.search(pattern) != -1)
         return chat;
     });
 
@@ -53,9 +75,6 @@ export class Contacts extends React.Component {
     )
   }
 
-  componentDidMount() {
-    this._loadInitialState().done();
-  }
 
   _loadInitialState = async () => {
     debugger
@@ -93,7 +112,8 @@ export class Contacts extends React.Component {
                       var membersdata = {
                           "name": Name,
                           "id": contactID,
-                          "image":image
+                          "image":image,
+                          "text":"Hello My dear",
                     }
                       wsmembers.push(membersdata);
                     
@@ -117,14 +137,13 @@ console.log(error)
   }
   _renderHeader() {
     return (
-      <View style={styles.searchContainer}>
+      
         <RkTextInput autoCapitalize='none'
                      autoCorrect={false}
                      onChange={(event) => this._filter(event.nativeEvent.text)}
                      label={<RkText rkType='awesome'>{FontAwesome.search}</RkText>}
                      rkType='row'
-                     placeholder='Search'/>
-      </View>
+                     placeholder='Search here'/>
     )
   }
 
@@ -147,7 +166,7 @@ console.log(error)
                 {moment().add(2, 'seconds').format('LT')}
               </RkText>
             </View>
-            <RkText numberOfLines={2} rkType='primary3 mediumLine'>{"Hi How you"}</RkText>
+            <RkText numberOfLines={2} rkType='primary3 mediumLine'>{info.item.text}</RkText>
           </View>
         </View>
       </TouchableOpacity>
@@ -204,5 +223,14 @@ let styles = RkStyleSheet.create(theme => ({
     width: 40,
     borderRadius: 20,
   },
-  
+  TextInputStyleClass:{
+        
+   textAlign: 'center',
+   height: 40,
+   borderWidth: 1,
+   borderColor: '#009688',
+   borderRadius: 7 ,
+   backgroundColor : "#FFFFFF"
+        
+   }
 }));

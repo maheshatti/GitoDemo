@@ -36,10 +36,10 @@ onSubmitregister(){
   var lname =this.state.lastname;
   var email = this.state.email;
   var uname = this.state.username;
-  var pass = this.state.password;
+  var pass = this.state.Password;
 
-
-  if (email.length== 0 ) {
+debugger
+  if (email.length == 0 ) {
     ToastAndroid.show("please enter email",ToastAndroid.SHORT);
       } else if(pass.length==0){
 

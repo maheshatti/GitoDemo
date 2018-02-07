@@ -1,12 +1,16 @@
 import React from 'react';
 import {
   DrawerNavigator,
-  StackNavigator
+  StackNavigator,
+  HeaderBackButton
 } from 'react-navigation';
 import {withRkTheme} from 'react-native-ui-kitten';
 import * as Screens from './screens';
 import {View} from "react-native";
 
+const navigationOptions = ({ navigation }) => ({
+    headerLeft: <HeaderBackButton onPress={() => navigation.goBack(null)} />,
+})
 function getCurrentRouteName(navigationState) {
   if (!navigationState) {
     return null;
@@ -25,10 +29,13 @@ const Gitomedemo = StackNavigator({
     screen: Screens.SignUp
   },
   List: {
-    screen: Screens.Contacts
+    screen: Screens.Contacts,
+    navigationOptions,
+    
   },
   Profile: {
-    screen: Screens.ProfileSettings
+    screen: Screens.ProfileSettings,
+  
   },
 
 },);
